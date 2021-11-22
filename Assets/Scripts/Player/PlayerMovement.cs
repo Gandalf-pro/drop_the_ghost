@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         float localForwadForce = this.forwardForce;
 
@@ -39,18 +39,42 @@ public class PlayerMovement : MonoBehaviour
             body.AddForce(0, jumpHeight, 0);
         }
 
-        if(Input.GetKey("w")){
-            body.AddForce(0, 0, localForwadForce * Time.deltaTime);
+        // if(Input.GetKey("w")){
+        //     body.AddForce(0, 0, localForwadForce * Time.deltaTime);
+        // }
+        // if(Input.GetKey("s")){
+        //     body.AddForce(0, 0, this.forwardForce * Time.deltaTime * -1);
+        // }
+        // if(Input.GetKey("d")){
+        //     body.AddForce(this.sidewayForce * Time.deltaTime, 0, 0, ForceMode.VelocityChange);
+        // }
+        // if(Input.GetKey("a")){
+        //     body.AddForce(-this.sidewayForce * Time.deltaTime, 0, 0, ForceMode.VelocityChange);
+        // }
+
+        // float moveHorizantal = Input.GetAxisRaw("Horizontal");
+        // float moveVertical = Input.GetAxisRaw("Vertical");
+
+        // Vector3 movement = new Vector3(moveHorizantal, 0.0f, moveVertical);
+
+        // body.AddForce(movement * localForwadForce);
+
+
+        // Look at
+
+        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Vector3 groundLevel = Vector3.up;
+        groundLevel.y = body.position.y - 1;
+        Plane groundPlane = new Plane(groundLevel, groundLevel);
+        float rayLenght;
+
+        if(groundPlane.Raycast(mouseRay, out rayLenght)){
+            Vector3 pointToLook = mouseRay.GetPoint(rayLenght);
+            Debug.DrawLine(mouseRay.origin, pointToLook, Color.blue);
+            Vector3 lookPoint = new Vector3(pointToLook.x, body.transform.position.y, pointToLook.z);
+            body.transform.LookAt(lookPoint);
+            body.position = Vector3.MoveTowards(body.position, lookPoint, localForwadForce * Time.deltaTime);
         }
-        if(Input.GetKey("s")){
-            body.AddForce(0, 0, this.forwardForce * Time.deltaTime * -1);
-        }
-        if(Input.GetKey("d")){
-            body.AddForce(this.sidewayForce * Time.deltaTime, 0, 0, ForceMode.VelocityChange);
-        }
-        if(Input.GetKey("a")){
-            body.AddForce(-this.sidewayForce * Time.deltaTime, 0, 0, ForceMode.VelocityChange);
-        }
-        
+
     }
 }

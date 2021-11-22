@@ -4,15 +4,10 @@ using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour
 {
+    public Rigidbody body;
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void FixedUpdate() {
+        // Physics.Raycast(body.transform.position,-Vector3.up,out hit)
+        Ray playerRay = Camera.main.ScreenPointToRay(Input.mousePosition);
     }
 }
